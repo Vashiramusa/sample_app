@@ -42,4 +42,4 @@ For more information, see the
 
 ## Contributor
 
-* Vashira Musa – [Linkedin](www.linkedin.com/in/vashira-samaila-462878142)
+* Vashira Musa Samaila – [Linkedin](www.linkedin.com/in/vashira-samaila-462878142)
