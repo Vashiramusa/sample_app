@@ -11,13 +11,17 @@
       <%= f.label :password %>
       <%= f.password_field :password, class: 'form-control' %>
 
+      <%= f.label :remember_me, class: "checkbox inline" do %>
+        <%= f.check_box :remember_me %>
+        <span>Remember me on this computer</span>
+      <% end %>
+
       <%= f.submit "Log in", class: "btn btn-primary" %>
     <% end %>
 
     <p>New user? <%= link_to "Sign up now!", signup_path %></p>
   </div>
 </div>
-
 <!--
 <form accept-charset="UTF-8" action="/login" method="post">
   <input name="utf8" type="hidden" value="&#x2713;" />
