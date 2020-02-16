@@ -2,11 +2,9 @@
 
 require 'test_helper'
 
-require 'test_helper'
-
 class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
   def setup
-    @user = users(:bola)
+    @user = users(:vashira)
   end
 
   test 'micropost interface' do
@@ -26,10 +24,9 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     assert_select 'div#error_explanation'
     # Valid submission
     content = 'This micropost really ties the room together'
-    picture = fixture_file_upload('test/fixtures/rails.png', 'image/png')
     assert_difference 'Micropost.count', 1 do
       post microposts_path, params: { micropost:
-        { content: content, picture: picture } }
+        { content: content } }
     end
     assert_redirected_to root_url
     follow_redirect!
@@ -41,7 +38,7 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
       delete micropost_path(first_micropost)
     end
     # Visit different user (no delete links)
-    get user_path(users(:samaila))
+    get user_path(users(:michael))
     assert_select 'a', text: 'delete', count: 0
   end
 
@@ -50,7 +47,7 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     get root_path
     assert_match "#{@user.microposts.count} microposts", response.body
     # User with zero microposts
-    other_user = users(:samaila)
+    other_user = users(:michael)
     log_in_as(other_user)
     get root_path
     assert_match '0 microposts', response.body

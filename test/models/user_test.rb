@@ -13,21 +13,31 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test 'name should be present' do
-    @user.name = 'a' * 51
+    @user.name = '     '
     assert_not @user.valid?
   end
 
   test 'email should be present' do
+    @user.email = '     '
+    assert_not @user.valid?
+  end
+
+  test 'name should not be too long' do
+    @user.name = 'a' * 51
+    assert_not @user.valid?
+  end
+
+  test 'email should not be too long' do
     @user.email = 'a' * 244 + '@example.com'
     assert_not @user.valid?
   end
 
-  test 'email validation should reject invalid addresses' do
-    invalid_addresses = %w[user@example,com user_at_foo.org user.name@example.
-                           foo@bar_baz.com foo@bar+baz.com]
-    invalid_addresses.each do |invalid_address|
-      @user.email = invalid_address
-      assert_not @user.valid?, "#{invalid_address.inspect} should be invalid"
+  test 'email validation should accept valid addresses' do
+    valid_addresses = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org
+                         first.last@foo.jp alice+bob@baz.cn]
+    valid_addresses.each do |valid_address|
+      @user.email = valid_address
+      assert @user.valid?, "#{valid_address.inspect} should be valid"
     end
   end
 
@@ -55,10 +65,6 @@ class UserTest < ActiveSupport::TestCase
     assert_not @user.valid?
   end
 
-  test 'authenticated? should return false for a user with nil digest' do
-    assert_not @user.authenticated?(:remember, '')
-  end
-
   test 'associated microposts should be destroyed' do
     @user.save
     @user.microposts.create!(content: 'Lorem ipsum')
@@ -69,18 +75,18 @@ class UserTest < ActiveSupport::TestCase
 
   test 'should follow and unfollow a user' do
     vashira = users(:vashira)
-    archer  = users(:archer)
-    assert_not vashira.following?(archer)
-    vashira.follow(archer)
-    assert vashira.following?(archer)
-    assert archer.followers.include?(vashira)
-    vashira.unfollow(archer)
-    assert_not vashira.following?(archer)
+    lana = users(:lana)
+    assert_not vashira.following?(lana)
+    vashira.follow(lana)
+    assert vashira.following?(lana)
+    assert lana.followers.include?(vashira)
+    vashira.unfollow(lana)
+    assert_not vashira.following?(lana)
   end
 
   test 'feed should have the right posts' do
     vashira = users(:vashira)
-    archer  = users(:archer)
+    lana = users(:lana)
     samaila = users(:samaila)
     # Posts from followed user
     samaila.microposts.each do |post_following|
@@ -91,7 +97,7 @@ class UserTest < ActiveSupport::TestCase
       assert vashira.feed.include?(post_self)
     end
     # Posts from unfollowed user
-    archer.microposts.each do |post_unfollowed|
+    lana.microposts.each do |post_unfollowed|
       assert_not vashira.feed.include?(post_unfollowed)
     end
   end

@@ -55,12 +55,7 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
           params: { email: user.email,
                     user: { password: 'password',
                             password_confirmation: '' } }
-    assert_select 'div#error_explanation'
-    # Empty password but valid confirmation
-    patch password_reset_path(user.reset_token),
-          params: { email: user.email,
-                    user: { password: '',
-                            password_confirmation: 'password' } }
+    
     assert_select 'div#error_explanation'
     # Valid password & confirmation
     patch password_reset_path(user.reset_token),
