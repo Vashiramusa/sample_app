@@ -14,7 +14,7 @@ class UsersController < ApplicationController
     @microposts = @user.microposts.paginate(page: params[:page])
     redirect_to(root_url) && return unless @user.activated?
   end
-  
+
   def new
     @user = User.new
   end
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
 
     if @user.save
       @user.send_activation_email
-      flash[:info] = "Please check your email to activate your account."
+      flash[:info] = 'Please check your email to activate your account.'
       redirect_to root_url
     else
       render 'new'
@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      flash[:success] = "Profile updated"
+      flash[:success] = 'Profile updated'
       redirect_to @user
     else
       render 'edit'
@@ -46,11 +46,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = 'User deleted'
+    name = @user.name
+    @user.destroy
+    flash[:success] = "#{name} has been succesfully deleted"
     redirect_to users_url
   end
-
 
   def following
     @title = 'Following'
@@ -83,6 +83,7 @@ class UsersController < ApplicationController
 
   # Confirms an admin user.
   def admin_user
-    redirect_to(root_url) unless current_user.admin?
+    @user = User.find(params[:id])
+    redirect_to root_url unless current_user.admin?
   end
 end
